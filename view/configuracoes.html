@@ -1,6 +1,6 @@
 <div class="card" style="box-shadow: 0px 0px 20px rgba(133, 135, 150, 0.54)">
      <div class="card-header">
-          <h4>Configurar Execução</h4>
+          <h4>Simulador Tomasulo - Configurar Execução</h4>
      </div>
      <div class="card-body">
           <div class="dropdown">
@@ -10,7 +10,7 @@
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                >
-                    Exemplos Prontos
+               <i class="fa fa-brands fa-stumbleupon"></i>   Exemplos Prontos
                </button>
                <ul class="dropdown-menu">
                     <li>
@@ -87,10 +87,10 @@
                     </li>
                </ul>
                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#adicionarIntrucoes">
-                Adicionar Instruções
+                    <i class="fa fa-brands fa-wpforms text-white"></i> Adicionar Instruções
               </button>
               <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#configurarIntrucoes">
-                Configurar Instruçoes
+               <i class="fa fa-brands fa-stack-overflow"></i> Configurar Instruçoes
               </button>
           </div>
 
@@ -345,11 +345,11 @@
               </div>
 
               
-               <div class="btn-group">
+               <div class="btnConfig">
                     <button
                          type="reset"
                          onclick="limparCampos()"
-                         class="btn btn-secondary text-white"
+                         class="btn buttonExemplo text-white"
                          id="limpar"
                     >
                          Limpar
@@ -358,7 +358,7 @@
                          type="submit"
                          onclick="enviar()"
                          id="enviar"
-                         class="btn btn-success text-white"
+                         class=" btn btn-danger text-white"
                     >
                          Simular <i class="fa fa-bolt"></i>
                     </button>

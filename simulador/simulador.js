@@ -899,11 +899,21 @@ function atualizaTabelaEstadoUFHTML(ufs) {
      }
 }
 
-function atualizaTabelaEstadoMenHTML(men) {
+function atualizaTabelaEstadoMenHTML(diagrama) {
+     let men = diagrama.estacaoRegistradores;
+     let  tabelaInsts= diagrama.estadoInstrucoes;
      for (var reg in men) {
           $(`#${reg}`).html(men[reg] ? men[reg] : '&nbsp;');
      }
+     for (let i in tabelaInsts) {
+          const inst = tabelaInsts[i];
+     if (inst['issue'] != null) {
+          $(`#${inst['instrucao'].registradorR}_Busy`).text(inst['write'] ? 'nao':'sim');  
+          $(`#${inst['instrucao'].registradorR}_Reoder`).html(inst['write'] ? '&nbsp;':`${i}`);           
+     }
 }
+}
+gerarTabelaEstadoMenHTML(diagrama);
 
 function atualizaClock(clock) {
      $('#clock').html('Ciclo: ' + clock);
@@ -915,14 +925,14 @@ function gerarTabelaEstadoInstrucaoHTML(diagrama) {
      var s =
           "<h3>Status das instruções</h3><table class='table table-striped table-hover'>" +
           '<tr><th></th><th>Instrução</th><th>i</th><th>j</th>' +
-          '<th>k</th><th>Issue</th><th>Exec. Completa</th><th>Write Result</th></tr>';
+          '<th>k</th><th class="text-center">Issue</th><th class="text-center">Exec. Completa</th><th class="text-center">Write Result</th></tr>';
 
      for (let i = 0; i < diagrama.configuracao['numInstrucoes']; ++i) {
           let instrucao = diagrama.estadoInstrucoes[i].instrucao;
-          s += `<tr> <td>I${i}</td> <td>${instrucao['operacao']}</td>
+          s += `<tr> <td>${i}</td> <td>${instrucao['operacao']}</td>
             <td>${instrucao['registradorR']}</td> <td>${instrucao['registradorS']}</td> <td>${instrucao['registradorT']}</td>
-            <td id='i${i}_is'></td></td> <td id='i${i}_ec'></td>
-            <td id='i${i}_wr'></td> </tr>`;
+            <td id='i${i}_is' class="text-center"></td></td> <td id='i${i}_ec' class="text-center"></td>
+            <td id='i${i}_wr' class="text-center"></td> </tr>`;
      }
 
      s += '</table>';
@@ -1006,23 +1016,45 @@ function gerarTabelaEstadoUFMem(diagrama) {
 }
 
 function gerarTabelaEstadoMenHTML(diagrama) {
-     var s = `<h3>Estado dos registradores</h3> <table class="table table-striped table-hover">`;
+     var s = `<h3>Estado dos registradores</h3> <table class="table table-hover">`;
 
-     for (var i = 0; i < 2; ++i) {
-          s += `<tr>`;
-          for (var j = 0; j < 16; j += 2) {
-               s += `<th>F${j + i * 16}</th>`;
+    
+          s += `<thead class="table-light"> <tr>`;
+          for (var j = 0; j <= 10; j++) {
+               if(j==0){
+                    s +=    `<th>Field</th>`
+               }
+               s += `<th>F${j}</th>`;
+          }
+          s += `</tr> </thead> <tbody> <tr>`;
+          for (var j = 0; j <= 10; j++) {
+               if(j==0){
+                    s +=    `<th>Qi</th>`
+               }
+               s += `<td id="F${j}">&nbsp;</td>`;
           }
           s += `</tr> <tr>`;
-          for (var j = 0; j < 16; j += 2) {
-               s += `<td id="F${j + i * 16}">&nbsp;</td>`;
+          for (var j = 0; j <= 10; j++) {
+               if(j==0){
+                    s +=    `<th>Reoder#</th>`
+               }
+               s += `<td id="F${j}_Reoder">&nbsp;</td>`;
           }
-          s += `</tr>`;
-     }
+          s += `</tr> <tr>`;
+          for (var j = 0; j <= 10; j++) {
+               if(j==0){
+                    s +=    `<th>Ocupado</th>`
+               }
+               s += `<td id="F${j}_Busy">não</td>`;
+          }
 
-     s += '</table>';
+     s += '</tbody> </table>';
+
+     
+     
      $('#estadoMem').html(s);
 }
+atualizaTabelaEstadoMenHTML(diagrama);
 
 function atualizaTabelaEstadoUFMemHTML(ufsMem) {
      console.log('AQUIIIIIIIIIII');
@@ -1189,7 +1221,7 @@ function enviar() {
      gerarTabelaEstadoUFHTML(diagrama);
      console.log('diagrama UF porra', diagrama);
      atualizaTabelaEstadoUFHTML(diagrama['unidadesFuncionais']);
-     gerarTabelaEstadoMenHTML(diagrama);
+     gerarTabelaEstadoMenHTML(diagrama);     
      gerarTabelaEstadoUFMem(diagrama);
      atualizaTabelaEstadoUFMemHTML(diagrama['ufMem']);
      atualizaTabelaBufferReordenamentoHTML(diagrama['ufMem']);
@@ -1219,7 +1251,7 @@ function proximoFunctionN() {
      atualizaTabelaBufferReordenamentoHTML(diagrama.estadoInstrucoes);
      atualizaTabelaEstadoUFMemHTML(diagrama.unidadesFuncionaisMemoria);
      atualizaTabelaEstadoUFHTML(diagrama.unidadesFuncionais);
-     atualizaTabelaEstadoMenHTML(diagrama.estacaoRegistradores);
+     atualizaTabelaEstadoMenHTML(diagrama);
      atualizaClock(diagrama.clock);
 }
 
@@ -1234,7 +1266,7 @@ function resultadobtn() {
           atualizaTabelaBufferReordenamentoHTML(diagrama.estadoInstrucoes);
           atualizaTabelaEstadoUFMemHTML(diagrama.unidadesFuncionaisMemoria);
           atualizaTabelaEstadoUFHTML(diagrama.unidadesFuncionais);
-          atualizaTabelaEstadoMenHTML(diagrama.estacaoRegistradores);
+          atualizaTabelaEstadoMenHTML(diagrama);
           atualizaClock(diagrama.clock);
      }
 }

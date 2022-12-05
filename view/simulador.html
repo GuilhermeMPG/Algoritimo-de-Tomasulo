@@ -4,21 +4,24 @@
           color: black !important;
      }
      h3 {
-          color: #4e73df !important;
+          color:rgb(0, 0, 0) !important;
+          font-size: 1.1rem;
+          font-weight: bold;
      }
      h4,
      .h4 {
           font-size: 1.5rem;
-          color: cornflowerblue !important;
+          
+          color: rgb(0, 0, 0) !important;
      }
 </style>
 <div class="card">
      <div class="card-header">
-          <h4 class="card-title">Simulador</h4>
+          <h4 class="card-title">Simulador Tomasulo - Execução</h4>
      </div>
      <div class="card-body">
           <div class="row">
-               <div class="btn-group col-md-6">
+               <div class="col-md-6">
                     <button
                          type="button"
                          class="btn btn-outline-secondary"
@@ -28,7 +31,7 @@
                     </button>
                     <button
                          type="button"
-                         class="btn btn-outline-primary"
+                         class="btn btn-outline-danger"
                          id="resultado"
                          onclick="resultadobtn()"
                     >
@@ -36,7 +39,7 @@
                     </button>
                     <button
                          type="button"
-                         class="btn btn-success text-white"
+                         class="btn btn-dark text-white"
                          onclick="proximoFunctionN()"
                          id="proximo"
                     >
@@ -44,7 +47,7 @@
                     </button>
                </div>
                <div class="text-center col-md-6">
-                    <button class="btn btn-outline-primary m-1">
+                    <button class="btn btn-outline-dark m-1">
                          <div id="clock"></div>
                     </button>
                </div>
