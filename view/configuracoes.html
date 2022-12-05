@@ -1,0 +1,369 @@
+<div class="card" style="box-shadow: 0px 0px 20px rgba(133, 135, 150, 0.54)">
+     <div class="card-header">
+          <h4>Configurar Execução</h4>
+     </div>
+     <div class="card-body">
+          <div class="dropdown">
+               <button
+                    class="btn btn-danger dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+               >
+                    Exemplos Prontos
+               </button>
+               <ul class="dropdown-menu">
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('00')"
+                              style="margin: 5px"
+                              >Exemplo 1</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('01')"
+                              style="margin: 5px"
+                              >Exemplo 2</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('02')"
+                              style="margin: 5px"
+                              >Exemplo 3</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('03')"
+                              style="margin: 5px"
+                              >Exemplo 4</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('04')"
+                              style="margin: 5px"
+                              >Exemplo 5</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('05')"
+                              style="margin: 5px"
+                              >Exemplo 6</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('06')"
+                              style="margin: 5px"
+                              >Exemplo 7</a
+                         >
+                    </li>
+                    <li>
+                         <a
+                              class="btn buttonExemplo"
+                              type="button"
+                              onclick="carregaExemplo('07')"
+                              style="margin: 5px"
+                              >Exemplo 8</a
+                         >
+                    </li>
+               </ul>
+               <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#adicionarIntrucoes">
+                Adicionar Instruções
+              </button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#configurarIntrucoes">
+                Configurar Instruçoes
+              </button>
+          </div>
+
+        
+          
+          <!-- Modal -->
+          <div class="modal fade" id="adicionarIntrucoes" tabindex="-1" aria-labelledby="adicionarIntrucoesLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="adicionarIntrucoesLabel">Adicionatr Instruções</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="nInst">Digite o Numero de Intruções</label>
+                    <input
+                    type="number"
+                    class="form-control"
+                    name="nInst"
+                    id="nInst"
+                    value="1"
+                    min="1"
+                    maxlength
+               />
+                </div>
+                <div class="modal-footer">
+                  
+                  <button
+                                             type="submit"
+                                             class="btn buttonExemplo"
+                                             name="confirmarNInst"
+                                             onclick="confirmarNInst()"
+                                             id="confirmarNInst"
+                                             data-bs-dismiss="modal"
+                                        >
+                                             
+                                             Adicionar
+                                        </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+               <div class="form-group col-12"></div>
+
+               <div class="form-group col-12 mt-3">
+                    <div class="card">
+                         <div class="card-header">
+                              <i class="fa fa-list"></i> Instruções
+                              <hr class="my-1" />                 
+                         <div class="card-body" id="listaInstrucoes">
+                              <div class="alert alert-info">
+                                   <i class="fa fa-info-circle"></i>
+                                   Nenhuma instrução foi criada, click no botão <strong>Adicionar Instruções</strong> , ou escolha algum dos <strong>Exemplos Prontos</strong>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+
+
+
+               <div class="modal fade" id="configurarIntrucoes" tabindex="-1" aria-labelledby="configurarIntrucoesLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="configurarIntrucoesLabel">Adicionatr Instruções</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <div
+                        class="accordion my-3"
+                        role="tablist"
+                        id="accordioninstructionsset"
+                   >
+                        <div class="accordion-item">
+                             <h2 class="accordion-header" role="tab">
+                                  <button
+                                       class="accordion-button"
+                                       data-bs-toggle="collapse"
+                                       data-bs-target="#accordioninstructionsset .item-1"
+                                       aria-expanded="true"
+                                       aria-controls="accordioninstructionsset .item-1"
+                                  >
+                                       Clique aqui para configurar as instruções
+                                  </button>
+                             </h2>
+                             <div
+                                  class="accordion-collapse collapse show item-1"
+                                  role="tabpanel"
+                                  data-bs-parent="#accordioninstructionsset"
+                             > -->
+                                  <div class="accordion-body row">
+                                       <p>Ciclos por instrução:</p>
+                                       <div class="form-group col-md-6">
+                                            <label
+                                                 class="form-label"
+                                                 for="ciclosInt"
+                                                 >Inteiro:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="ciclosInt"
+                                                 id="ciclosInt"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label
+                                                 class="form-label"
+                                                 for="ciclosLoad"
+                                                 >Load:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="ciclosLoad"
+                                                 id="ciclosLoad"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label
+                                                 class="form-label"
+                                                 for="ciclosStore"
+                                                 >Store:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="ciclosStore"
+                                                 id="ciclosStore"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label
+                                                 class="form-label"
+                                                 for="ciclosFPMult"
+                                                 >FP Mult:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="ciclosFPMult"
+                                                 id="ciclosFPMult"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label
+                                                 class="form-label"
+                                                 for="ciclosFPDiv"
+                                                 >FP Div:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="ciclosFPDiv"
+                                                 id="ciclosFPDiv"
+                                            />
+                                       </div>
+                                       
+    
+                                       <p class="mt-2">Quantidade Unidades Funcionais de Memória:</p>
+                                       <div class="form-group col-md-6">
+                                            <label class="form-label" for="fuLoad"
+                                                 >Load:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="fuLoad"
+                                                 id="fuLoad"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label class="form-label" for="fuStore"
+                                                 >Store:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="fuStore"
+                                                 id="fuStore"
+                                            />
+                                       </div>
+                                       <p>Quantidade FU's</p>
+                                       <div class="form-group col-md-6">
+                                            <label class="form-label" for="fuInt"
+                                                 >Inteiro:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="fuFPMul"
+                                                 id="fuInt"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label class="form-label" for="fuFPMul"
+                                                 >FP Mult:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="fuFPMult"
+                                                 id="fuFPMul"
+                                            />
+                                       </div>
+                                       <div class="form-group col-md-6">
+                                            <label class="form-label" for="fuFPAdd"
+                                                 >FP Add:</label
+                                            >
+                                            <input
+                                                 type="number"
+                                                 class="form-control"
+                                                 min="1"
+                                                 value="1"
+                                                 name="fuFPAdd"
+                                                 id="fuFPAdd"
+                                            />
+                                       </div>
+                                  </div>
+                             <!-- </div>
+                        </div>
+                   </div> -->
+               
+                   
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ok</button>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              
+               <div class="btn-group">
+                    <button
+                         type="reset"
+                         onclick="limparCampos()"
+                         class="btn btn-secondary text-white"
+                         id="limpar"
+                    >
+                         Limpar
+                    </button>
+                    <button
+                         type="submit"
+                         onclick="enviar()"
+                         id="enviar"
+                         class="btn btn-success text-white"
+                    >
+                         Simular <i class="fa fa-bolt"></i>
+                    </button>
+               </div>
+          </div>
+          <hr />
+     </div>
+</div>
