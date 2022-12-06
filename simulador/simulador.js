@@ -1,4 +1,4 @@
-Estado =   class {
+Estado = class {
      constructor(CONFIG, instrucoes) {
           // salva as configurações passadas
           this.configuracao = {
@@ -1204,58 +1204,63 @@ function desalocaUF(uf) {
      uf.qj = null;
      uf.qk = null;
 }
+let condicaoEntra = true;
 function casoDesvio(diagrama) {
      let condicao = false;
      let posicaoDesvio = null;
      let posicaoDestinoDesvio = null;
-    
+
      for (let i in diagrama.estadoInstrucoes) {
           const inst = diagrama.estadoInstrucoes[i];
           if (inst.instrucao['operacao'] == 'BNEZ') {
-               
                posicaoDesvio = inst.posicao;
                posicaoDestinoDesvio = inst.instrucao['registradorS'];
                condicao = true;
-               console.log('Cheguei aquii ',posicaoDestinoDesvio)
-               console.log('rrr',posicaoDesvio)
+               console.log('Cheguei aquii ', posicaoDestinoDesvio);
+               console.log('rrr', posicaoDesvio);
           }
      }
-     if(condicao){
+     if (condicao) {
           console.log('Cheguei aquii 2');
-     if (diagrama.estadoInstrucoes[posicaoDesvio].write) {
-          console.log('Cheguei aquii 2');
-          
-          for (let i = posicaoDesvio + 1; i < posicaoDestinoDesvio; i++) {
-               for (let key in diagrama.unidadesFuncionais) {
-                    const uf = diagrama.unidadesFuncionais[key];
-                    if (i == uf['posicao']) {
-                       desalocaUF(uf);
-                         
-                    }
-               }
-               for (let key in diagrama.unidadesFuncionaisMemoria) {
-                    const ufMem = diagrama.unidadesFuncionaisMemoria[key];
-                    if (i == ufMem['posicao']) {
-                       desalocaUFMem(ufMem);
-                    }
-               }
-          //      if( diagrama.estadoInstrucoes[i].registradorR){
-          //      let registrador = diagrama.estadoInstrucoes[i].registradorR;
-          //      diagrama.estacaoRegistradores[`${registrador}`] = null;
-          // }
-               console.log('Cheguei aquii 3',i)
-               diagrama.estadoInstrucoes.splice(i);
+          if (diagrama.estadoInstrucoes[posicaoDesvio].write && condicaoEntra) {
+               condicaoEntra = false;
+               console.log('Cheguei aquii 7');
 
-               atualizaTabelaEstadoInstrucaoHTML(diagrama.estadoInstrucoes);
-               atualizaTabelaBufferReordenamentoHTML(diagrama.estadoInstrucoes);
-               atualizaTabelaEstadoUFMemHTML(
-                    diagrama.unidadesFuncionaisMemoria
-               );
-               atualizaTabelaEstadoUFHTML(diagrama.unidadesFuncionais);
-               atualizaTabelaEstadoMenHTML(diagrama);
+               for (let i = posicaoDesvio + 1; i < posicaoDestinoDesvio; i++) {
+                    for (let key in diagrama.unidadesFuncionais) {
+                         const uf = diagrama.unidadesFuncionais[key];
+                         if (i == uf['posicao']) {
+                              desalocaUF(uf);
+                         }
+                    }
+                    for (let key in diagrama.unidadesFuncionaisMemoria) {
+                         const ufMem = diagrama.unidadesFuncionaisMemoria[key];
+                         if (i == ufMem['posicao']) {
+                              desalocaUFMem(ufMem);
+                         }
+                    }
+                    //      if( diagrama.estadoInstrucoes[i].registradorR){
+                    //      let registrador = diagrama.estadoInstrucoes[i].registradorR;
+                    //      diagrama.estacaoRegistradores[`${registrador}`] = null;
+                    // }
+                    console.log('Cheguei aquii 3', i);
+                    console.log(diagrama);
+                    // $(`#i${i}_is`).html('');
+                    // $(`#i${i}_ec`).html('');
+                    // $(`#i${i}_wr`).html('');
+                    diagrama.estadoInstrucoes.splice(i, 1);
+                    console.log(diagrama, '2');
+
+                    // atualizaTabelaEstadoInstrucaoHTML(diagrama.estadoInstrucoes);
+                    // atualizaTabelaBufferReordenamentoHTML(diagrama.estadoInstrucoes);
+                    // atualizaTabelaEstadoUFMemHTML(
+                    //      diagrama.unidadesFuncionaisMemoria
+                    // );
+                    // atualizaTabelaEstadoUFHTML(diagrama.unidadesFuncionais);
+                    // atualizaTabelaEstadoMenHTML(diagrama);
+               }
           }
-
-     }}
+     }
 }
 
 function carregaExemplo(exN = false) {
@@ -1383,6 +1388,7 @@ function proximoFunctionN() {
      atualizaTabelaEstadoMenHTML(diagrama);
      atualizaClock(diagrama.clock);
      casoDesvio(diagrama);
+     console.log(diagrama);
 }
 
 function resultadobtn() {
