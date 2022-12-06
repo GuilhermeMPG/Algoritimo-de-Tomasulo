@@ -1,4 +1,4 @@
-Estado = class {
+Estado =   class {
      constructor(CONFIG, instrucoes) {
           // salva as configurações passadas
           this.configuracao = {
@@ -199,7 +199,7 @@ Estado = class {
           uf.operacao = instrucao.operacao;
           uf.endereco = instrucao.registradorS + '+' + instrucao.registradorT;
           uf.destino = instrucao.registradorR;
-          uf.posicao =estadoInstrucao.posicao;
+          uf.posicao = estadoInstrucao.posicao;
           uf.qi = null;
           uf.qj = null;
 
@@ -245,7 +245,7 @@ Estado = class {
           uf.ocupado = true;
           uf.operacao = instrucao.operacao;
           uf.destino = instrucao.registradorR;
-          uf.posicao =estadoInstrucao.posicao;
+          uf.posicao = estadoInstrucao.posicao;
 
           let reg_j;
           let reg_k;
@@ -804,15 +804,15 @@ function getUnidadeInstrucao(instrucao) {
 }
 
 // -----------------------------------------------------------------------------
-function verificaEscrita (tabelaInsts,i){
-     if(i>=0){
-      const inst=tabelaInsts[i];
-      if(inst['write']){
-          return verificaEscrita (tabelaInsts,i-1);
-      }else{
-          return false;
-      }
-     }else {
+function verificaEscrita(tabelaInsts, i) {
+     if (i >= 0) {
+          const inst = tabelaInsts[i];
+          if (inst['write']) {
+               return verificaEscrita(tabelaInsts, i - 1);
+          } else {
+               return false;
+          }
+     } else {
           return true;
      }
 }
@@ -820,24 +820,31 @@ function verificaEscrita (tabelaInsts,i){
 function atualizaTabelaEstadoInstrucaoHTML(tabelaInsts) {
      for (let i in tabelaInsts) {
           const inst = tabelaInsts[i];
-          const instAnterior = tabelaInsts[i-1];
-          if(i<=0){
-          $(`#i${inst['posicao']}_is`).html(inst['issue'] ? '&checkmark;' : '');
-          $(`#i${inst['posicao']}_ec`).html(
-               inst['exeCompleta'] ? '&checkmark;' : ''
-          );
-          $(`#i${inst['posicao']}_wr`).html(inst['write'] ? '&checkmark;' : '');
-     }else{
-          $(`#i${inst['posicao']}_is`).html(inst['issue'] ? '&checkmark;' : '');
-          $(`#i${inst['posicao']}_ec`).html(
-               inst['exeCompleta'] ? '&checkmark;' : ''
-          );
-          
-          if(verificaEscrita (tabelaInsts,i-1)){
-          $(`#i${inst['posicao']}_wr`).html(inst['write'] ? '&checkmark;' : '');
-     }
+          const instAnterior = tabelaInsts[i - 1];
+          if (i <= 0) {
+               $(`#i${inst['posicao']}_is`).html(
+                    inst['issue'] ? '&checkmark;' : ''
+               );
+               $(`#i${inst['posicao']}_ec`).html(
+                    inst['exeCompleta'] ? '&checkmark;' : ''
+               );
+               $(`#i${inst['posicao']}_wr`).html(
+                    inst['write'] ? '&checkmark;' : ''
+               );
+          } else {
+               $(`#i${inst['posicao']}_is`).html(
+                    inst['issue'] ? '&checkmark;' : ''
+               );
+               $(`#i${inst['posicao']}_ec`).html(
+                    inst['exeCompleta'] ? '&checkmark;' : ''
+               );
 
-     }
+               if (verificaEscrita(tabelaInsts, i - 1)) {
+                    $(`#i${inst['posicao']}_wr`).html(
+                         inst['write'] ? '&checkmark;' : ''
+                    );
+               }
+          }
      }
 }
 
@@ -903,9 +910,9 @@ function atualizaTabelaBufferReordenamentoHTML(tabelaInsts) {
           }
 
           if (inst['write'] != null) {
-               if(verificaEscrita (tabelaInsts,i-1)){
-               $(`#${inst['posicao']}_estado`).text('Commit');
-               $(`#${inst['posicao']}_busy`).text('não');
+               if (verificaEscrita(tabelaInsts, i - 1)) {
+                    $(`#${inst['posicao']}_estado`).text('Commit');
+                    $(`#${inst['posicao']}_busy`).text('não');
                }
           }
 
@@ -917,7 +924,7 @@ function atualizaTabelaBufferReordenamentoHTML(tabelaInsts) {
 }
 
 function atualizaTabelaEstadoUFHTML(ufs) {
-     console.log('aquii abaixoooooooooooo')
+     console.log('aquii abaixoooooooooooo');
      console.log(ufs);
      for (let i in ufs) {
           const uf = ufs[i];
@@ -939,7 +946,6 @@ function atualizaTabelaEstadoUFHTML(ufs) {
           $(`#${uf['nome']}_posicaoUF`).text(
                uf['posicao'] != null ? `#${uf['posicao']}` : ''
           );
-      
      }
 }
 
@@ -1015,7 +1021,7 @@ function gerarTabelaEstadoUFHTML(diagrama) {
           "<h3>Estações de Reserva</h3><table class='table table-striped table-hover'><tr> <th>UF</th> <th>Ocupado</th>" +
           '<th>Op</th> <th>Vj</th> <th>Vk</th> <th>Qj</th> <th>Qk</th>' +
           '<th> A (Endereço)</th> <th>Destino</th>';
-          
+
      let unidadesFuncionais = diagrama.unidadesFuncionais;
      for (let key in unidadesFuncionais) {
           var uf = unidadesFuncionais[key];
@@ -1170,6 +1176,87 @@ function geraTabelaParaInserirInstrucoes(nInst) {
 }
 
 // -----------------------------------------------------------------------------
+function desalocaUFMem(ufMem) {
+     // funcao que desaloca (limpa os campos) das unidades funcionais de memoria
+     ufMem.instrucao = null;
+     ufMem.estadoInstrucao = null;
+     ufMem.tempo = null;
+     ufMem.ocupado = false;
+     ufMem.operacao = null;
+     ufMem.endereco = null;
+     ufMem.destino = null;
+     ufMem.posicao = null;
+     ufMem.qi = null;
+     ufMem.qj = null;
+}
+
+function desalocaUF(uf) {
+     // funcao que desaloca (limpa os campos) das unidades funcionais
+     uf.instrucao = null;
+     uf.estadoInstrucao = null;
+     uf.tempo = null;
+     uf.ocupado = false;
+     uf.operacao = null;
+     uf.destino = null;
+     uf.posicao = null;
+     uf.vj = null;
+     uf.vk = null;
+     uf.qj = null;
+     uf.qk = null;
+}
+function casoDesvio(diagrama) {
+     let condicao = false;
+     let posicaoDesvio = null;
+     let posicaoDestinoDesvio = null;
+    
+     for (let i in diagrama.estadoInstrucoes) {
+          const inst = diagrama.estadoInstrucoes[i];
+          if (inst.instrucao['operacao'] == 'BNEZ') {
+               
+               posicaoDesvio = inst.posicao;
+               posicaoDestinoDesvio = inst.instrucao['registradorS'];
+               condicao = true;
+               console.log('Cheguei aquii ',posicaoDestinoDesvio)
+               console.log('rrr',posicaoDesvio)
+          }
+     }
+     if(condicao){
+          console.log('Cheguei aquii 2');
+     if (diagrama.estadoInstrucoes[posicaoDesvio].write) {
+          console.log('Cheguei aquii 2');
+          
+          for (let i = posicaoDesvio + 1; i < posicaoDestinoDesvio; i++) {
+               for (let key in diagrama.unidadesFuncionais) {
+                    const uf = diagrama.unidadesFuncionais[key];
+                    if (i == uf['posicao']) {
+                       desalocaUF(uf);
+                         
+                    }
+               }
+               for (let key in diagrama.unidadesFuncionaisMemoria) {
+                    const ufMem = diagrama.unidadesFuncionaisMemoria[key];
+                    if (i == ufMem['posicao']) {
+                       desalocaUFMem(ufMem);
+                    }
+               }
+          //      if( diagrama.estadoInstrucoes[i].registradorR){
+          //      let registrador = diagrama.estadoInstrucoes[i].registradorR;
+          //      diagrama.estacaoRegistradores[`${registrador}`] = null;
+          // }
+               console.log('Cheguei aquii 3',i)
+               diagrama.estadoInstrucoes.splice(i);
+
+               atualizaTabelaEstadoInstrucaoHTML(diagrama.estadoInstrucoes);
+               atualizaTabelaBufferReordenamentoHTML(diagrama.estadoInstrucoes);
+               atualizaTabelaEstadoUFMemHTML(
+                    diagrama.unidadesFuncionaisMemoria
+               );
+               atualizaTabelaEstadoUFHTML(diagrama.unidadesFuncionais);
+               atualizaTabelaEstadoMenHTML(diagrama);
+          }
+
+     }}
+}
 
 function carregaExemplo(exN = false) {
      if (!exN) {
@@ -1295,6 +1382,7 @@ function proximoFunctionN() {
      atualizaTabelaEstadoUFHTML(diagrama.unidadesFuncionais);
      atualizaTabelaEstadoMenHTML(diagrama);
      atualizaClock(diagrama.clock);
+     casoDesvio(diagrama);
 }
 
 function resultadobtn() {
