@@ -121,11 +121,11 @@ Estado = class {
                     return 'Store';
                case 'ADD':
                     return 'Integer';
-               case 'DADDUI':
+               case 'ADDI':
                     return 'Integer';
                case 'BEQ':
                     return 'Integer';
-               case 'BNEZ':
+               case 'C.BNEZ':
                     return 'Integer';
           }
      }
@@ -181,11 +181,11 @@ Estado = class {
                     return parseInt(this.configuracao.ciclos['Store']);
                case 'ADD':
                     return parseInt(this.configuracao.ciclos['Integer']);
-               case 'DADDUI':
+               case 'ADDI':
                     return parseInt(this.configuracao.ciclos['Integer']);
                case 'BEQ':
                     return parseInt(this.configuracao.ciclos['Integer']);
-               case 'BNEZ':
+               case 'C.BNEZ':
                     return parseInt(this.configuracao.ciclos['Integer']);
           }
      }
@@ -253,7 +253,7 @@ Estado = class {
           let reg_k_inst;
 
           // caso seja uma das instrucoes condicionais
-          if (instrucao.operacao === 'BNEZ' || instrucao.operacao === 'BEQ') {
+          if (instrucao.operacao === 'C.BNEZ' || instrucao.operacao === 'BEQ') {
                reg_j = this.estacaoRegistradores[instrucao.registradorR]; // busca o nome da uf q esta usando o registrador r
                reg_k = this.estacaoRegistradores[instrucao.registradorS]; // busca o nome da uf q esta usando o registrador s
 
@@ -715,7 +715,7 @@ function validaInstrucao(instrucao) {
                }
                return true;
           }
-          if (comando == 'BNEZ') {
+          if (comando == 'C.BNEZ') {
                if (
                     registradorInvalidoR(instrucao['r']) ||
                     instrucao['s'].replace(' ', '') == '' ||
@@ -737,7 +737,7 @@ function validaInstrucao(instrucao) {
                }
                return true;
           }
-          if (comando == 'DADDUI') {
+          if (comando == 'ADDI') {
                if (
                     registradorInvalidoR(instrucao['r']) ||
                     registradorInvalidoR(instrucao['s']) ||
@@ -780,11 +780,11 @@ function getUnidadeInstrucao(instrucao) {
      switch (instrucao) {
           case 'ADD':
                return 'Integer';
-          case 'DADDUI':
+          case 'ADDI':
                return 'Integer';
           case 'BEQ':
                return 'Integer';
-          case 'BNEZ':
+          case 'C.BNEZ':
                return 'Integer';
           case 'FS':
                return 'Store';
@@ -874,7 +874,7 @@ function atualizaTabelaBufferReordenamentoHTML(tabelaInsts) {
                } else if (
                     inst['instrucao'].operacao == 'FADD' ||
                     inst['instrucao'].operacao == 'ADD' ||
-                    inst['instrucao'].operacao == 'DADDUI'
+                    inst['instrucao'].operacao == 'ADDI'
                ) {
                     $(`#${inst['posicao']}_value`).text(
                          inst['instrucao'].registradorS +
@@ -1144,9 +1144,9 @@ function geraTabelaParaInserirInstrucoes(nInst) {
                '<option value="FADD">FADD</option>' +
                '<option value="FSUB">FSUB</option>' +
                '<option value="ADD">ADD</option>' +
-               '<option value="DADDUI">DADDUI</option>' +
+               '<option value="ADDI">ADDI</option>' +
                '<option value="BEQ">BEQ</option>' +
-               '<option value="BNEZ">BNEZ</option>' +
+               '<option value="C.BNEZ">C.BNEZ</option>' +
                '</td>' +
                '<td><input class=\'form-control\' type="text" name="' +
                r +

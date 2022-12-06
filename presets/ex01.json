@@ -6,10 +6,10 @@
             "ciclosStore": 2,
             "ciclosFPAdd": 2,
             "ciclosFPMul": 10,
-            "ciclosFPDiv": 40
+            "ciclosFPDiv": 15
         },
         "unidades": {
-            "fuLoad": 6,
+            "fuLoad": 2,
             "fuStore": 3,
             "fuInt": 3,
             "fuFPAdd": 3,
