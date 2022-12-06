@@ -46,6 +46,8 @@ Estado = class {
                     unidadeFuncional['vk'] = null; // valor de k
                     unidadeFuncional['qj'] = null; // uf que esta gerando j
                     unidadeFuncional['qk'] = null; // uf que esta gerando k
+                    unidadeFuncional['destino'] = null; // registrador de destino
+                    unidadeFuncional['posicao'] = null; // posicao no buffer de reordenamento registrador de destino
 
                     this.unidadesFuncionais[nome] = unidadeFuncional;
                }
@@ -70,6 +72,7 @@ Estado = class {
                     unidadeFuncionalMemoria['operacao'] = null; // operacao que esta sendo executada
                     unidadeFuncionalMemoria['endereco'] = null; // endereco onde vai ser buscado
                     unidadeFuncionalMemoria['destino'] = null; // registrador de destino
+                    unidadeFuncionalMemoria['posicao'] = null; // posicao no buffer de reordenamento registrador de destino
 
                     this.unidadesFuncionaisMemoria[nome] =
                          unidadeFuncionalMemoria;
@@ -196,6 +199,7 @@ Estado = class {
           uf.operacao = instrucao.operacao;
           uf.endereco = instrucao.registradorS + '+' + instrucao.registradorT;
           uf.destino = instrucao.registradorR;
+          uf.posicao =estadoInstrucao.posicao;
           uf.qi = null;
           uf.qj = null;
 
@@ -240,6 +244,8 @@ Estado = class {
           uf.tempo = this.getCiclos(instrucao) + 1; // é somado 1 pq vai ser subtraido 1 na fase de execucao apos isso
           uf.ocupado = true;
           uf.operacao = instrucao.operacao;
+          uf.destino = instrucao.registradorR;
+          uf.posicao =estadoInstrucao.posicao;
 
           let reg_j;
           let reg_k;
@@ -344,6 +350,7 @@ Estado = class {
           ufMem.operacao = null;
           ufMem.endereco = null;
           ufMem.destino = null;
+          ufMem.posicao = null;
           ufMem.qi = null;
           ufMem.qj = null;
      }
@@ -355,6 +362,8 @@ Estado = class {
           uf.tempo = null;
           uf.ocupado = false;
           uf.operacao = null;
+          uf.destino = null;
+          uf.posicao = null;
           uf.vj = null;
           uf.vk = null;
           uf.qj = null;
@@ -795,13 +804,40 @@ function getUnidadeInstrucao(instrucao) {
 }
 
 // -----------------------------------------------------------------------------
+function verificaEscrita (tabelaInsts,i){
+     if(i>=0){
+      const inst=tabelaInsts[i];
+      if(inst['write']){
+          return verificaEscrita (tabelaInsts,i-1);
+      }else{
+          return false;
+      }
+     }else {
+          return true;
+     }
+}
 
 function atualizaTabelaEstadoInstrucaoHTML(tabelaInsts) {
      for (let i in tabelaInsts) {
           const inst = tabelaInsts[i];
+          const instAnterior = tabelaInsts[i-1];
+          if(i<=0){
           $(`#i${inst['posicao']}_is`).html(inst['issue'] ? '&checkmark;' : '');
-          $(`#i${inst['posicao']}_ec`).html(inst['exeCompleta'] ? '&checkmark;' : '');
+          $(`#i${inst['posicao']}_ec`).html(
+               inst['exeCompleta'] ? '&checkmark;' : ''
+          );
           $(`#i${inst['posicao']}_wr`).html(inst['write'] ? '&checkmark;' : '');
+     }else{
+          $(`#i${inst['posicao']}_is`).html(inst['issue'] ? '&checkmark;' : '');
+          $(`#i${inst['posicao']}_ec`).html(
+               inst['exeCompleta'] ? '&checkmark;' : ''
+          );
+          
+          if(verificaEscrita (tabelaInsts,i-1)){
+          $(`#i${inst['posicao']}_wr`).html(inst['write'] ? '&checkmark;' : '');
+     }
+
+     }
      }
 }
 
@@ -867,8 +903,10 @@ function atualizaTabelaBufferReordenamentoHTML(tabelaInsts) {
           }
 
           if (inst['write'] != null) {
+               if(verificaEscrita (tabelaInsts,i-1)){
                $(`#${inst['posicao']}_estado`).text('Commit');
                $(`#${inst['posicao']}_busy`).text('não');
+               }
           }
 
           // $(`#i${inst['posicao']}_ec`).text(
@@ -879,6 +917,8 @@ function atualizaTabelaBufferReordenamentoHTML(tabelaInsts) {
 }
 
 function atualizaTabelaEstadoUFHTML(ufs) {
+     console.log('aquii abaixoooooooooooo')
+     console.log(ufs);
      for (let i in ufs) {
           const uf = ufs[i];
           $(`#${uf['nome']}_tempo`).text(
@@ -896,24 +936,31 @@ function atualizaTabelaEstadoUFHTML(ufs) {
           $(`#${uf['nome']}_qk`).text(
                uf['qk'] && uf['qk'] !== 1 ? uf['qk'] : ''
           );
+          $(`#${uf['nome']}_posicaoUF`).text(
+               uf['posicao'] != null ? `#${uf['posicao']}` : ''
+          );
+      
      }
 }
 
 function atualizaTabelaEstadoMenHTML(diagrama) {
      let men = diagrama.estacaoRegistradores;
-     let  tabelaInsts= diagrama.estadoInstrucoes;
+     let tabelaInsts = diagrama.estadoInstrucoes;
      for (var reg in men) {
           $(`#${reg}`).html(men[reg] ? men[reg] : '&nbsp;');
      }
      for (let i in tabelaInsts) {
           const inst = tabelaInsts[i];
-     if (inst['issue'] != null) {
-          $(`#${inst['instrucao'].registradorR}_Busy`).text(inst['write'] ? 'nao':'sim');  
-          $(`#${inst['instrucao'].registradorR}_Reoder`).html(inst['write'] ? '&nbsp;':`${i}`);           
+          if (inst['issue'] != null) {
+               $(`#${inst['instrucao'].registradorR}_Busy`).text(
+                    inst['write'] ? 'nao' : 'sim'
+               );
+               $(`#${inst['instrucao'].registradorR}_Reoder`).html(
+                    inst['write'] ? '&nbsp;' : `${i}`
+               );
+          }
      }
 }
-}
-gerarTabelaEstadoMenHTML(diagrama);
 
 function atualizaClock(clock) {
      $('#clock').html('Ciclo: ' + clock);
@@ -965,11 +1012,10 @@ function gerarTabelaBufferReordenamento(diagrama) {
 
 function gerarTabelaEstadoUFHTML(diagrama) {
      var s =
-          "<h3>Unidades Funcionais</h3><table class='table table-striped table-hover'><tr> <th>UF</th> <th>Ocupado</th>" +
+          "<h3>Estações de Reserva</h3><table class='table table-striped table-hover'><tr> <th>UF</th> <th>Ocupado</th>" +
           '<th>Op</th> <th>Vj</th> <th>Vk</th> <th>Qj</th> <th>Qk</th>' +
-          '<th>Endereço</th> <th>Destino</th>';
-
-     console.log(diagrama.unidadesFuncionais);
+          '<th> A (Endereço)</th> <th>Destino</th>';
+          
      let unidadesFuncionais = diagrama.unidadesFuncionais;
      for (let key in unidadesFuncionais) {
           var uf = unidadesFuncionais[key];
@@ -979,7 +1025,7 @@ function gerarTabelaEstadoUFHTML(diagrama) {
              <td id="${uf['nome']}_operacao"></td>
              <td id="${uf['nome']}_vj"></td> <td id="${uf['nome']}_vk"></td>
              <td id="${uf['nome']}_qj"></td> <td id="${uf['nome']}_qk"></td>
-             <td id=""></td><td id=""></td>
+             <td id=""></td><td id="${uf['nome']}_posicaoUF"></td>
              `;
      }
      for (let key in diagrama.unidadesFuncionaisMemoria) {
@@ -990,7 +1036,7 @@ function gerarTabelaEstadoUFHTML(diagrama) {
              <td id="${ufMem['nome']}_operacao"></td>
              <td id=""></td> <td id=""></td>
              <td id=""></td> <td id=""></td>
-             <td id="${ufMem['nome']}_endereco"></td><td id="${ufMem['nome']}_destino"></td>
+             <td id="${ufMem['nome']}_endereco"></td><td id="${ufMem['nome']}_posicaoMemUF"></td>
              `;
      }
 
@@ -1018,50 +1064,46 @@ function gerarTabelaEstadoUFMem(diagrama) {
 function gerarTabelaEstadoMenHTML(diagrama) {
      var s = `<h3>Estado dos registradores</h3> <table class="table table-hover">`;
 
-    
-          s += `<thead class="table-light"> <tr>`;
-          for (var j = 0; j <= 10; j++) {
-               if(j==0){
-                    s +=    `<th>Field</th>`
-               }
-               s += `<th>F${j}</th>`;
+     s += `<thead class="table-light"> <tr>`;
+     for (var j = 0; j <= 10; j++) {
+          if (j == 0) {
+               s += `<th>Field</th>`;
           }
-          s += `</tr> </thead> <tbody> <tr>`;
-          for (var j = 0; j <= 10; j++) {
-               if(j==0){
-                    s +=    `<th>Qi</th>`
-               }
-               s += `<td id="F${j}">&nbsp;</td>`;
+          s += `<th>F${j}</th>`;
+     }
+     s += `</tr> </thead> <tbody> <tr>`;
+     for (var j = 0; j <= 10; j++) {
+          if (j == 0) {
+               s += `<th>Qi</th>`;
           }
-          s += `</tr> <tr>`;
-          for (var j = 0; j <= 10; j++) {
-               if(j==0){
-                    s +=    `<th>Reoder#</th>`
-               }
-               s += `<td id="F${j}_Reoder">&nbsp;</td>`;
+          s += `<td id="F${j}">&nbsp;</td>`;
+     }
+     s += `</tr> <tr>`;
+     for (var j = 0; j <= 10; j++) {
+          if (j == 0) {
+               s += `<th>Reoder#</th>`;
           }
-          s += `</tr> <tr>`;
-          for (var j = 0; j <= 10; j++) {
-               if(j==0){
-                    s +=    `<th>Ocupado</th>`
-               }
-               s += `<td id="F${j}_Busy">não</td>`;
+          s += `<td id="F${j}_Reoder">&nbsp;</td>`;
+     }
+     s += `</tr> <tr>`;
+     for (var j = 0; j <= 10; j++) {
+          if (j == 0) {
+               s += `<th>Ocupado</th>`;
           }
+          s += `<td id="F${j}_Busy">não</td>`;
+     }
 
      s += '</tbody> </table>';
 
-     
-     
      $('#estadoMem').html(s);
 }
-atualizaTabelaEstadoMenHTML(diagrama);
 
 function atualizaTabelaEstadoUFMemHTML(ufsMem) {
      console.log('AQUIIIIIIIIIII');
      console.log(ufsMem);
      for (let key in ufsMem) {
           const ufMem = ufsMem[key];
-          console.log('QQQQ', ufMem);
+          console.log('testando');
           $(`#${ufMem['nome']}_tempo`).text(
                ufMem['tempo'] !== null ? ufMem['tempo'] : ''
           );
@@ -1072,8 +1114,8 @@ function atualizaTabelaEstadoUFMemHTML(ufsMem) {
           $(`#${ufMem['nome']}_endereco`).text(
                ufMem['endereco'] ? ufMem['endereco'] : ''
           );
-          $(`#${ufMem['nome']}_destino`).text(
-               ufMem['destino'] ? ufMem['destino'] : ''
+          $(`#${ufMem['nome']}_posicaoMemUF`).text(
+               ufMem['posicao'] != null ? `#${ufMem['posicao']}` : ''
           );
      }
 }
@@ -1221,7 +1263,7 @@ function enviar() {
      gerarTabelaEstadoUFHTML(diagrama);
      console.log('diagrama UF porra', diagrama);
      atualizaTabelaEstadoUFHTML(diagrama['unidadesFuncionais']);
-     gerarTabelaEstadoMenHTML(diagrama);     
+     gerarTabelaEstadoMenHTML(diagrama);
      gerarTabelaEstadoUFMem(diagrama);
      atualizaTabelaEstadoUFMemHTML(diagrama['ufMem']);
      atualizaTabelaBufferReordenamentoHTML(diagrama['ufMem']);
